@@ -1,0 +1,4 @@
+# id;nombre;documento;rol;correo;salario
+1;Laura Gómez;1098111222;ADMINISTRADOR;laura.gomez@crediya.com;4500000.00
+2;Carlos Ruiz;1098333444;ASESOR;carlos.ruiz@crediya.com;2800000.00
+3;Diana Castro;1098555666;COBRADOR;diana.castro@crediya.com;2200000.00

@@ -1,0 +1,52 @@
+digraph CrediYa {
+  rankdir=BT; splines=ortho; nodesep=0.5; ranksep=0.7;
+  node [shape=record, fontname="Helvetica", fontsize=10, style=filled, fillcolor="#FFFFFF"];
+  edge [fontname="Helvetica", fontsize=9];
+
+  Registrable [label="{«interface»\nRegistrable|+ aLineaArchivo(): String}", fillcolor="#EEF3FB"];
+  Persona [label="{«abstract»\nPersona|- id: int\l- nombre: String\l- documento: String\l- correo: String\l|+ getTipo(): String «abstract»\l+ descripcionCorta(): String\l}", fillcolor="#EEF3FB"];
+  Empleado [label="{Empleado|- rol: String\l- salario: double\l|+ getTipo(): String\l+ aLineaArchivo(): String\l}"];
+  Cliente [label="{Cliente|- telefono: String\l|+ getTipo(): String\l+ aLineaArchivo(): String\l}"];
+  Prestamo [label="{Prestamo|- id: int\l- cliente: Cliente\l- empleado: Empleado\l- monto: double\l- interes: double\l- cuotas: int\l- cuotaMensual: double\l- fechaInicio: LocalDate\l- estado: String\l- montoTotal: double\l- saldoPendiente: double\l|+ getFechaVencimiento(): LocalDate\l+ estaVencido(hoy): boolean\l+ aLineaArchivo(): String\l}"];
+  Pago [label="{Pago|- id: int\l- prestamo: Prestamo\l- fechaPago: LocalDate\l- monto: double\l|+ aLineaArchivo(): String\l}"];
+
+  Persona -> Registrable [arrowhead=empty, style=dashed];
+  Prestamo -> Registrable [arrowhead=empty, style=dashed];
+  Pago -> Registrable [arrowhead=empty, style=dashed];
+  Empleado -> Persona [arrowhead=empty];
+  Cliente -> Persona [arrowhead=empty];
+  Prestamo -> Cliente [arrowhead=vee, xlabel="1..*  1"];
+  Prestamo -> Empleado [arrowhead=vee, xlabel="1..*  1"];
+  Pago -> Prestamo [arrowhead=vee, xlabel="0..*  1"];
+
+  CrudDAO [label="{«interface»\nCrudDAO\<T\>|+ guardar(T): int\l+ listar(): List\<T\>\l+ buscarPorId(int): Optional\<T\>\l}", fillcolor="#FDF3E7"];
+  EmpleadoDAO [label="{EmpleadoDAO|+ existeDocumento(String)\l+ existeCorreo(String)\l}", fillcolor="#FDF3E7"];
+  ClienteDAO [label="{ClienteDAO|+ existeDocumento(String)\l+ existeCorreo(String)\l}", fillcolor="#FDF3E7"];
+  PrestamoDAO [label="{PrestamoDAO|+ actualizarSaldoYEstado(...)\l+ refinanciar(...)\l}", fillcolor="#FDF3E7"];
+  PagoDAO [label="{PagoDAO|+ guardarYActualizarPrestamo(...)\l+ listarPorPrestamo(int)\l}", fillcolor="#FDF3E7"];
+  ConexionBD [label="{ConexionBD|+ conectar(): Connection\l}", fillcolor="#FDF3E7"];
+  EmpleadoDAO -> CrudDAO [arrowhead=empty, style=dashed];
+  ClienteDAO -> CrudDAO [arrowhead=empty, style=dashed];
+  PrestamoDAO -> CrudDAO [arrowhead=empty, style=dashed];
+  PagoDAO -> CrudDAO [arrowhead=empty, style=dashed];
+  CrudDAO -> ConexionBD [style=dashed, arrowhead=vee, xlabel="usa"];
+
+  EmpleadoServicio [label="{EmpleadoServicio|+ registrarEmpleado(Empleado)\l+ listarEmpleados()\l}", fillcolor="#EAF6EC"];
+  ClienteServicio [label="{ClienteServicio|+ registrarCliente(Cliente)\l+ listarClientes()\l}", fillcolor="#EAF6EC"];
+  PrestamoServicio [label="{PrestamoServicio|+ crearPrestamo(Prestamo)\l+ cambiarEstado(int, String)\l+ refinanciarPrestamo(int, int)\l+ prestamosDeCliente(int)\l}", fillcolor="#EAF6EC"];
+  PagoServicio [label="{PagoServicio|+ registrarPago(Pago)\l+ mostrarHistorialPorPrestamo(int)\l}", fillcolor="#EAF6EC"];
+  ReporteServicio [label="{ReporteServicio|+ mostrarPrestamosActivos()\l+ mostrarPrestamosVencidos()\l+ mostrarClientesMorosos()\l+ ... (Stream API)\l}", fillcolor="#EAF6EC"];
+  EmpleadoServicio -> EmpleadoDAO [arrowhead=vee];
+  ClienteServicio -> ClienteDAO [arrowhead=vee];
+  PrestamoServicio -> PrestamoDAO [arrowhead=vee];
+  PagoServicio -> PagoDAO [arrowhead=vee];
+  PagoServicio -> PrestamoDAO [arrowhead=vee];
+  ReporteServicio -> PrestamoDAO [arrowhead=vee];
+
+  CrediyaException [label="{CrediyaException|extends Exception}", fillcolor="#FBECEC"];
+  PrestamoException [label="{PrestamoException}", fillcolor="#FBECEC"];
+  ValidacionException [label="{ValidacionException}", fillcolor="#FBECEC"];
+  PersistenciaException [label="{PersistenciaException|extends RuntimeException}", fillcolor="#FBECEC"];
+  PrestamoException -> CrediyaException [arrowhead=empty];
+  ValidacionException -> CrediyaException [arrowhead=empty];
+}
