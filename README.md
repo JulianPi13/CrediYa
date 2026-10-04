@@ -232,11 +232,11 @@ Deuda total: $2.800.000,00
 ## 8. Subir a GitHub
 
 ```bash
-git remote add origin https://github.com/SU_USUARIO/CrediYa.git
+git remote add origin https://github.com/JulianPi13/CrediYa.git
 git branch -M main
 git push -u origin main
 ```
 
 ---
 
-**Autor:** Oscar Gerardo Pinto Duarte
+**Autor:** Oscar Julian Pinto Uribe
